@@ -47,15 +47,18 @@ namespace ExamplePca9685PwmDriver
                 {
                     Debug.Print("Output:" + i.ToString());
 
-                    for (int i1 = 150; i1 < 450; i1++)
+                    for (int high = 3640; high < 3940; high++)
                     {
-                        pca.SetPwm((byte)i, 0, i1);
+                        pca.SetPwm((byte)i, high, 0);
                         Thread.Sleep(20);
                     }
                    
-                    led.Write(!led.Read());
-                    pca.SetPwm((byte)i, 0, 300);
-                    Thread.Sleep(1000);
+                    // other way
+                    for (int low = 150; low < 400; low++)
+                    {
+                        pca.SetPwm((byte)i, 0, low);
+                        Thread.Sleep(20);
+                    }
                 }
             }
         }

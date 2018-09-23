@@ -82,14 +82,7 @@ namespace ExamplePca9685PwmDriver
         /// <param name="frequency"></param>
         public void SetPwmFrequency(float frequency)
         {
-            // internal clock frequency
-            frequency *= 0.9f;
-            float prescaleval = 25000000;
-            prescaleval /= 4096;
-            prescaleval /= frequency;
-            prescaleval -= 1;
-
-            byte prescale = (byte)(prescaleval + 0.5);
+            byte prescale = this.GetPrescale(frequency);
 
             byte[] buffer = new byte[1] { PCA9685_MODE1 };
             
@@ -113,6 +106,23 @@ namespace ExamplePca9685PwmDriver
             byte[] bufferRead = new byte[] { PCA9685_MODE1 };
             this.Read(bufferRead);
             Debug.Print("Mode now: " + bufferRead[0].ToString());
+        }
+
+        /// <summary>
+        /// Create the prescale value for the module to use the target frequency.
+        /// </summary>
+        /// <param name="frequency"></param>
+        /// <returns></returns>
+        private byte GetPrescale(float frequency)
+        {
+            frequency *= 0.9f;
+            // internal clock frequency
+            float prescaleval = 25000000;
+            prescaleval /= 4096;
+            prescaleval /= frequency;
+            prescaleval -= 1;
+
+            return (byte)(prescaleval + 0.5);
         }
         
         /// <summary>
